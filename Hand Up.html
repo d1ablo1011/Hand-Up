@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hand Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EFF1; --surface:#FAFBFB; --ink:#12263A; --muted:#506577; --line:#BCCBD3;
+  --need:#F2B53B; --need-ink:#1B2A3A; --help:#1A7466; --help-ink:#FFFFFF;
+  --danger:#A8322A; --focus:#1B5FD1; --soft-help:#BFE0D9;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1A25; --surface:#16273A; --ink:#E7EEF3; --muted:#9FB3C2; --line:#2C4157;
+    --help:#3DB5A2; --help-ink:#06201B; --danger:#F08A80; --focus:#8DB8FF; --soft-help:#1F4A47;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1A25; --surface:#16273A; --ink:#E7EEF3; --muted:#9FB3C2; --line:#2C4157;
+  --help:#3DB5A2; --help-ink:#06201B; --danger:#F08A80; --focus:#8DB8FF; --soft-help:#1F4A47;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.55 var(--body);-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;letter-spacing:-.015em}
+p{margin:0}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:880px;margin:0 auto;padding:0 1.25rem}
+
+header.top{padding:1.1rem 0;border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.mark{font:800 1.45rem/1 var(--display);letter-spacing:-.03em}
+.mark i{display:inline-block;width:.62em;height:.62em;background:var(--need);border-radius:50%;margin-left:.2em;vertical-align:baseline}
+
+.hero{padding:3rem 0 2.2rem}
+.hero h1{font-size:clamp(2.1rem,7vw,3.6rem);font-weight:800;max-width:15em}
+.hero .lede{margin-top:1.1rem;max-width:34em;color:var(--muted);font-size:1.15rem}
+.cta{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.6rem}
+.steps{list-style:none;counter-reset:s;margin:2.2rem 0 0;padding:0;display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.steps li{counter-increment:s;padding-left:2.4rem;position:relative;color:var(--muted);font-size:.98rem}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font:700 .9rem var(--display)}
+.steps b{display:block;color:var(--ink);font-weight:600}
+
+.btn{font:600 1rem var(--body);min-height:46px;padding:0 1.2rem;border-radius:8px;border:2px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;text-align:center}
+.btn[disabled]{opacity:.55;cursor:wait}
+.btn-need{background:var(--need);color:var(--need-ink)}
+.btn-help{background:var(--help);color:var(--help-ink)}
+.btn-line{background:transparent;color:var(--ink);border-color:var(--ink)}
+.btn-text{background:none;border:0;color:var(--muted);min-height:40px;padding:0 .6rem;font:500 .95rem var(--body);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.btn-text.danger{color:var(--danger)}
+
+.board{padding:1.4rem 0 4rem}
+.board-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:.5rem 1rem}
+.board-head h2{font-size:1.7rem;font-weight:800}
+.counts{color:var(--muted);font-size:.98rem}
+.banner{margin-top:1rem;padding:.8rem 1rem;border-radius:8px;border:1px solid var(--line);background:var(--surface);font-size:.95rem}
+.banner.warn{border-color:var(--need)}
+details.safe{margin-top:1rem;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+details.safe summary{cursor:pointer;padding:.8rem 1rem;font-weight:600;min-height:44px}
+details.safe ul{margin:0;padding:0 1.2rem 1rem 2.2rem;color:var(--muted);font-size:.97rem}
+details.safe li{margin-top:.35rem}
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem;align-items:center}
+.chip{font:500 .95rem var(--body);min-height:40px;padding:0 .95rem;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:8px;overflow:hidden;margin-right:.6rem}
+.seg button{font:600 .95rem var(--body);min-height:40px;padding:0 1rem;border:0;background:transparent;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+.list{display:grid;gap:1.1rem;margin-top:1.4rem}
+.slip{position:relative;display:grid;grid-template-columns:128px 1fr;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stub{position:relative;padding:1rem .9rem;background:var(--need);color:var(--need-ink);border-right:2px dashed var(--bg);display:flex;flex-direction:column;justify-content:space-between;gap:.8rem;min-width:0}
+.slip.helped .stub{background:var(--help);color:var(--help-ink)}
+.stub::before,.stub::after{content:"";position:absolute;right:-11px;width:22px;height:22px;border-radius:50%;background:var(--bg);border:1px solid var(--line)}
+.stub::before{top:-11px}.stub::after{bottom:-11px}
+.stub strong{font:800 1.3rem/1.1 var(--display);overflow-wrap:anywhere}
+.stub span{font-size:.88rem;font-weight:600;line-height:1.25}
+.slip .main{padding:1rem 1.15rem 1rem;min-width:0}
+.slip h3{font-size:1.3rem;font-weight:800}
+.meta{color:var(--muted);font-size:.9rem;margin-top:.3rem}
+.story{margin-top:.7rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.story.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.prog{margin-top:.9rem}
+.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden;position:relative}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--soft-help)}
+.bar b{position:absolute;left:0;top:0;bottom:0;background:var(--help)}
+.prog small{display:block;margin-top:.35rem;color:var(--muted);font-size:.88rem}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .6rem;margin-top:.95rem}
+.offers{margin-top:.9rem;border-top:1px solid var(--line);padding-top:.8rem;display:grid;gap:.7rem}
+.offer{font-size:.95rem;padding:.65rem .8rem;border-radius:8px;background:var(--bg);overflow-wrap:anywhere}
+.offer .who{font-weight:600}
+.offer .row{display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:center;margin-top:.3rem;color:var(--muted)}
+.tag{display:inline-block;font-size:.8rem;font-weight:600;padding:.05rem .5rem;border-radius:99px;background:var(--help);color:var(--help-ink)}
+.empty{padding:2.2rem 1.2rem;border:2px dashed var(--line);border-radius:12px;text-align:left}
+.empty h3{font-size:1.3rem}
+.empty p{color:var(--muted);margin:.5rem 0 1rem;max-width:32em}
+
+dialog{width:min(560px,calc(100% - 1.5rem));max-height:calc(100% - 1.5rem);border:0;border-radius:14px;padding:0;background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(8,18,28,.6)}
+dialog[open]{animation:pop .18s ease-out}
+@keyframes pop{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.dlg{padding:1.4rem 1.3rem 1.2rem}
+.dlg h2{font-size:1.5rem;font-weight:800}
+.dlg .sub{color:var(--muted);font-size:.95rem;margin-top:.4rem}
+.field{margin-top:1rem}
+.field label{display:block;font-weight:600;font-size:.95rem;margin-bottom:.3rem}
+.field .hint{color:var(--muted);font-weight:400}
+input,select,textarea{width:100%;font:400 1rem var(--body);color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:.6rem .75rem;min-height:46px}
+textarea{min-height:110px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.amt{display:grid;grid-template-columns:1fr 110px;gap:.6rem}
+.check{display:flex;gap:.6rem;align-items:flex-start;margin-top:1rem;font-size:.95rem}
+.check input{width:22px;height:22px;min-height:0;margin-top:.15rem;flex:none}
+.dlg-actions{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1.3rem;flex-wrap:wrap}
+
+#toast{position:fixed;left:50%;bottom:calc(1.2rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.7rem 1.1rem;border-radius:10px;font-weight:600;font-size:.95rem;opacity:0;pointer-events:none;transition:opacity .2s;max-width:calc(100% - 2rem);text-align:center;z-index:50}
+#toast.on{opacity:1}
+
+@media (max-width:620px){
+  .slip{grid-template-columns:1fr}
+  .stub{flex-direction:row;align-items:center;justify-content:space-between;border-right:0;border-bottom:2px dashed var(--bg)}
+  .stub::before,.stub::after{top:auto;bottom:-11px}
+  .stub::before{left:-11px;right:auto}
+  .stub::after{right:-11px}
+  .two{grid-template-columns:1fr}
+  .hero{padding-top:2.2rem}
+}
+@media (prefers-reduced-motion:reduce){dialog[open]{animation:none}#toast{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <div class="mark">Hand Up<i></i></div>
+  <button class="btn btn-line" id="topPost" type="button">Post a request</button>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+  <h1>Say what you need. Someone who can help will see it.</h1>
+  <p class="lede">Hand Up is an open board. People post one specific need, like school fees, a month of groceries or a sewing machine. People with money or time to spare choose a request and help directly.</p>
+  <div class="cta">
+    <button class="btn btn-need" id="heroPost" type="button">Post a request</button>
+    <a class="btn btn-line" href="#board">Browse requests</a>
+  </div>
+  <ol class="steps">
+    <li><b>Post a request</b>Describe the need, the amount if it's money, and how to reach you.</li>
+    <li><b>Receive an offer</b>A helper offers money, goods or time and contacts you.</li>
+    <li><b>Confirm it arrived</b>Mark the offer received, then close the request.</li>
+  </ol>
+</div></section>
+
+<section class="board" id="board"><div class="wrap">
+  <div class="board-head">
+    <h2>Open board</h2>
+    <p class="counts" id="counts" aria-live="polite"></p>
+  </div>
+  <div id="notice"></div>
+  <details class="safe">
+    <summary>Giving and receiving safely</summary>
+    <ul>
+      <li>Everything on this board is public. Don't post ID numbers, bank card numbers or home addresses.</li>
+      <li>Helpers: pay schools, landlords, clinics and shops directly when you can, and ask questions before sending money.</li>
+      <li>Nobody should ever pay a fee to receive help. If someone asks for one, don't send it.</li>
+      <li>Requesters: share your contact details only in the offer thread you trust, and confirm receipt only when help has actually arrived.</li>
+    </ul>
+  </details>
+  <div class="filters" id="filters"></div>
+  <div class="list" id="list"></div>
+</div></section>
+</main>
+
+<dialog id="postDlg" aria-labelledby="postTitle"><div class="dlg">
+  <h2 id="postTitle">Post a request</h2>
+  <p class="sub">Be specific and honest. Everything you write here is public.</p>
+  <form id="postForm">
+    <div class="two">
+      <div class="field"><label for="pName">First name or nickname</label><input id="pName" maxlength="40" required autocomplete="given-name"></div>
+      <div class="field"><label for="pArea">Town or area</label><input id="pArea" maxlength="60" required></div>
+    </div>
+    <div class="field"><label for="pCat">Type of need</label>
+      <select id="pCat"><option>Food</option><option>Housing</option><option>School</option><option>Health</option><option>Work tools</option><option>Other</option></select></div>
+    <div class="field"><label for="pTitle">What do you need?</label><input id="pTitle" maxlength="80" required placeholder="School fees for the term"></div>
+    <div class="field"><label for="pStory">Your situation</label><textarea id="pStory" maxlength="600" required placeholder="Who is affected, what happened, and what the help will pay for."></textarea></div>
+    <div class="field"><label for="pAmt">Amount needed <span class="hint">(leave empty if it isn't money)</span></label>
+      <div class="amt"><input id="pAmt" type="number" min="1" max="100000000" step="1" inputmode="numeric">
+      <select id="pCur" aria-label="Currency"><option>USD</option><option>EUR</option><option>GBP</option><option>NGN</option><option>KES</option><option>GHS</option><option>ZAR</option><option>INR</option><option>PHP</option><option>BRL</option><option>MXN</option></select></div></div>
+    <div class="field"><label for="pContact">How can helpers reach you?</label><input id="pContact" maxlength="100" required placeholder="Phone, WhatsApp or email"></div>
+    <label class="check"><input type="checkbox" id="pOk" required><span>I understand this request and my contact details are visible to everyone who opens this board.</span></label>
+    <div class="dlg-actions">
+      <button class="btn btn-line" type="button" data-close>Cancel</button>
+      <button class="btn btn-need" type="submit">Post request</button>
+    </div>
+  </form>
+</div></dialog>
+
+<dialog id="helpDlg" aria-labelledby="helpTitle"><div class="dlg">
+  <h2 id="helpTitle">Offer to help</h2>
+  <p class="sub" id="helpFor"></p>
+  <form id="helpForm">
+    <div class="field"><label for="hName">Your name <span class="hint">(optional)</span></label><input id="hName" maxlength="40" autocomplete="given-name"></div>
+    <div class="field"><label for="hAmt">Amount you can give <span class="hint">(optional)</span></label><input id="hAmt" type="number" min="1" max="100000000" step="1" inputmode="numeric"></div>
+    <div class="field"><label for="hNote">What you're offering</label><textarea id="hNote" maxlength="300" required placeholder="For example: I can cover this amount, or I can drive you on Saturday."></textarea></div>
+    <div class="field"><label for="hContact">How should they reach you?</label><input id="hContact" maxlength="100" required placeholder="Phone, WhatsApp or email"></div>
+    <p class="sub">The person who posted will see this offer. Pay schools, landlords or clinics directly when you can.</p>
+    <div class="dlg-actions">
+      <button class="btn btn-line" type="button" data-close>Cancel</button>
+      <button class="btn btn-help" type="submit">Send offer</button>
+    </div>
+  </form>
+</div></dialog>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var CATS=["All","Food","Housing","School","Health","Work tools","Other"];
+  var state={requests:[],pledges:[],loading:true,cat:"All",status:"open",open:{},confirm:null,helpFor:null};
+  var db=null,uid=null,isAdmin=false,canWrite=true,previewMode=false;
+
+  /* ---------- helpers ---------- */
+  function h(tag,attrs){
+    var e=document.createElement(tag);attrs=attrs||{};
+    Object.keys(attrs).forEach(function(k){
+      var v=attrs[k];
+      if(k==="class")e.className=v;
+      else if(k.indexOf("on")===0)e.addEventListener(k.slice(2),v);
+      else if(v===true)e.setAttribute(k,"");
+      else if(v!==false&&v!=null)e.setAttribute(k,v);
+    });
+    for(var i=2;i<arguments.length;i++){
+      [].concat(arguments[i]).forEach(function(c){
+        if(c==null||c===false)return;
+        e.append(c.nodeType?c:document.createTextNode(String(c)));
+      });
+    }
+    return e;
+  }
+  function $(id){return document.getElementById(id)}
+  function money(n,cur){
+    try{return new Intl.NumberFormat(undefined,{style:"currency",currency:cur,maximumFractionDigits:0}).format(n)}
+    catch(e){return cur+" "+n}
+  }
+  function ago(t){
+    if(!t)return "just now";
+    var s=(Date.now()-t)/1000;
+    if(s<60)return "just now";
+    var m=s/60;if(m<60)return Math.floor(m)+" min ago";
+    var hr=m/60;if(hr<24)return Math.floor(hr)+" h ago";
+    var d=hr/24;if(d<30)return Math.floor(d)+" days ago";
+    return new Date(t).toLocaleDateString();
+  }
+  var toastTimer;
+  function toast(msg){
+    var t=$("toast");t.textContent=msg;t.classList.add("on");
+    clearTimeout(toastTimer);toastTimer=setTimeout(function(){t.classList.remove("on")},3200);
+  }
+  function localId(){
+    try{
+      var k=localStorage.getItem("handup-uid");
+      if(!k){k="u"+Math.random().toString(36).slice(2,10);localStorage.setItem("handup-uid",k)}
+      return k;
+    }catch(e){return "u"+Math.random().toString(36).slice(2,10)}
+  }
+
+  /* ---------- store: shared database when available, in-tab memory otherwise ---------- */
+  var mem={requests:new Map(),pledges:new Map()},memSubs={requests:[],pledges:[]};
+  function memEmit(c){
+    var rows=[];mem[c].forEach(function(d,id){rows.push(Object.assign({id:id},d))});
+    memSubs[c].forEach(function(f){f(rows)});
+  }
+  var store={
+    watch:function(c,cb){
+      if(db){
+        return db.collection(c).onSnapshot(function(s){
+          cb(s.docs.map(function(d){return Object.assign({id:d.id},d.data())}));
+        },function(){toast("Lost connection to the board. Reload to reconnect.")});
+      }
+      memSubs[c].push(cb);memEmit(c);
+      return function(){};
+    },
+    add:function(c,data){
+      if(db)return db.collection(c).add(data);
+      mem[c].set("m"+Date.now()+Math.random().toString(36).slice(2,6),data);memEmit(c);
+      return Promise.resolve();
+    },
+    patch:function(c,id,data){
+      if(db)return db.collection(c).doc(id).update(data);
+      mem[c].set(id,Object.assign({},mem[c].get(id),data));memEmit(c);
+      return Promise.resolve();
+    },
+    del:function(c,id){
+      if(db)return db.collection(c).doc(id).delete();
+      mem[c].delete(id);memEmit(c);
+      return Promise.resolve();
+    }
+  };
+
+  /* ---------- derived data ---------- */
+  function pledgesFor(id){
+    return state.pledges.filter(function(p){return p.requestId===id})
+      .sort(function(a,b){return (a.createdAt||0)-(b.createdAt||0)});
+  }
+  function canManage(r){return r.uid===uid||isAdmin}
+  function guardWrite(){
+    if(canWrite)return true;
+    toast("You can read this board but not post. Ask the owner for Contributor access.");
+    return false;
+  }
+
+  /* ---------- rendering ---------- */
+  function renderNotice(){
+    var n=$("notice");n.replaceChildren();
+    if(previewMode)n.append(h("div",{class:"banner warn"},"Preview mode: this page isn't connected to a shared board, so requests are kept in this tab only."));
+    else if(!canWrite)n.append(h("div",{class:"banner"},"You're viewing the board. To post or offer help, ask the owner for Contributor access."));
+  }
+  function renderFilters(){
+    var f=$("filters");f.replaceChildren();
+    var seg=h("div",{class:"seg",role:"group","aria-label":"Status"});
+    [["open","Open"],["helped","Helped"]].forEach(function(x){
+      seg.append(h("button",{type:"button","aria-pressed":String(state.status===x[0]),onclick:function(){state.status=x[0];render()}},x[1]));
+    });
+    f.append(seg);
+    CATS.forEach(function(c){
+      f.append(h("button",{class:"chip",type:"button","aria-pressed":String(state.cat===c),onclick:function(){state.cat=c;render()}},c));
+    });
+  }
+  function slip(r){
+    var ps=pledgesFor(r.id);
+    var received=0,offered=0;
+    ps.forEach(function(p){offered+=p.amount||0;if(p.status==="received")received+=p.amount||0});
+    var helped=r.status==="helped";
+    var expanded=!!state.open[r.id];
+
+    var stub=h("div",{class:"stub"},
+      h("strong",null,r.amount?money(r.amount,r.currency):"Any help"),
+      h("span",null,helped?"Helped":r.category));
+
+    var main=h("div",{class:"main"},
+      h("h3",null,r.title),
+      h("p",{class:"meta"},r.name+" in "+r.area+", "+ago(r.createdAt)+(helped?"":" · "+r.category)),
+      h("p",{class:"story"+(expanded?"":" clamp")},r.story));
+
+    if(r.amount){
+      var rp=Math.min(100,received/r.amount*100),op=Math.min(100,(offered)/r.amount*100);
+      main.append(h("div",{class:"prog"},
+        h("div",{class:"bar",role:"img","aria-label":money(received,r.currency)+" received, "+money(offered,r.currency)+" offered of "+money(r.amount,r.currency)},
+          h("i",{style:"width:"+op+"%"}),h("b",{style:"width:"+rp+"%"})),
+        h("small",null,money(received,r.currency)+" received, "+money(offered,r.currency)+" offered of "+money(r.amount,r.currency))));
+    }
+
+    var acts=h("div",{class:"actions"});
+    if(!helped)acts.append(h("button",{class:"btn btn-help",type:"button",onclick:function(){openHelp(r)}},"Help with this"));
+    acts.append(h("button",{class:"btn-text",type:"button","aria-expanded":String(expanded),onclick:function(){state.open[r.id]=!expanded;render()}},
+      expanded?"Hide details":"Read more and see offers ("+ps.length+")"));
+    if(canManage(r)){
+      acts.append(h("button",{class:"btn-text",type:"button",onclick:function(){
+        store.patch("requests",r.id,{status:helped?"open":"helped"}).then(function(){toast(helped?"Request reopened":"Marked as helped")}).catch(function(){toast("Couldn't update the request. Try again.")});
+      }},helped?"Reopen":"Mark as helped"));
+      var sure=state.confirm===r.id;
+      acts.append(h("button",{class:"btn-text danger",type:"button",onclick:function(){
+        if(!sure){state.confirm=r.id;render();setTimeout(function(){if(state.confirm===r.id){state.confirm=null;render()}},4000);return}
+        state.confirm=null;
+        Promise.all(ps.map(function(p){return store.del("pledges",p.id)})).then(function(){return store.del("requests",r.id)})
+          .then(function(){toast("Request removed")}).catch(function(){toast("Couldn't remove the request. Try again.")});
+      }},sure?"Tap again to remove":"Remove"));
+    }
+    main.append(acts);
+
+    if(expanded){
+      var box=h("div",{class:"offers"});
+      if(!ps.length)box.append(h("p",{class:"meta"},"No offers yet."));
+      ps.forEach(function(p){
+        var row=h("div",{class:"row"},
+          p.amount?money(p.amount,r.currency):"No amount",
+          h("span",null,"Contact: "+p.contact),
+          p.status==="received"?h("span",{class:"tag"},"Received"):null,
+          (canManage(r)&&p.status!=="received")?h("button",{class:"btn-text",type:"button",onclick:function(){
+            store.patch("pledges",p.id,{status:"received"}).then(function(){toast("Marked as received")}).catch(function(){toast("Couldn't update the offer. Try again.")});
+          }},"Mark received"):null);
+        box.append(h("div",{class:"offer"},h("span",{class:"who"},p.name||"Anonymous"),p.note?" — "+p.note:"",row));
+      });
+      main.append(box);
+    }
+    return h("article",{class:"slip"+(helped?" helped":"")},stub,main);
+  }
+  function render(){
+    renderNotice();renderFilters();
+    var open=state.requests.filter(function(r){return r.status!=="helped"}).length;
+    var done=state.requests.length-open;
+    $("counts").textContent=state.loading?"":open+" open, "+done+" helped";
+    var list=$("list");list.replaceChildren();
+    if(state.loading){list.append(h("p",{class:"meta"},"Loading the board…"));return}
+    var rows=state.requests.filter(function(r){
+      return (state.status==="helped"?r.status==="helped":r.status!=="helped")&&(state.cat==="All"||r.category===state.cat);
+    }).sort(function(a,b){return (b.createdAt||0)-(a.createdAt||0)});
+    if(!rows.length){
+      var none=state.requests.length===0;
+      list.append(h("div",{class:"empty"},
+        h("h3",null,none?"No requests yet":"Nothing here"),
+        h("p",null,none?"Post the first request, or check back soon. Helpers can browse and offer help as soon as there is something to see.":"No "+(state.status==="helped"?"helped":"open")+" requests match this filter. Try another type of need."),
+        none?h("button",{class:"btn btn-need",type:"button",onclick:openPost},"Post a request"):null));
+      return;
+    }
+    rows.forEach(function(r){list.append(slip(r))});
+  }
+
+  /* ---------- dialogs ---------- */
+  function openPost(){if(guardWrite())$("postDlg").showModal()}
+  function openHelp(r){
+    if(!guardWrite())return;
+    state.helpFor=r;
+    $("helpFor").textContent="You're offering help with: "+r.title;
+    $("helpDlg").showModal();
+  }
+  document.querySelectorAll("[data-close]").forEach(function(b){
+    b.addEventListener("click",function(){b.closest("dialog").close()});
+  });
+  ["postDlg","helpDlg"].forEach(function(id){
+    var d=$(id);
+    d.addEventListener("click",function(e){if(e.target===d)d.close()});
+  });
+  $("topPost").addEventListener("click",openPost);
+  $("heroPost").addEventListener("click",openPost);
+
+  function busy(form,on){
+    var b=form.querySelector("button[type=submit]");b.disabled=on;
+  }
+  $("postForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    if(!guardWrite())return;
+    var f=e.target,amt=parseInt($("pAmt").value,10);
+    var data={
+      name:$("pName").value.trim(),area:$("pArea").value.trim(),category:$("pCat").value,
+      title:$("pTitle").value.trim(),story:$("pStory").value.trim(),
+      amount:amt>0?amt:0,currency:$("pCur").value,contact:$("pContact").value.trim(),
+      status:"open",uid:uid,createdAt:Date.now()
+    };
+    busy(f,true);
+    store.add("requests",data).then(function(){
+      f.reset();$("postDlg").close();toast("Request posted");
+      state.status="open";state.cat="All";render();location.hash="board";
+    }).catch(function(){toast("Couldn't post the request. Try again.")}).then(function(){busy(f,false)});
+  });
+  $("helpForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    if(!guardWrite()||!state.helpFor)return;
+    var f=e.target,amt=parseInt($("hAmt").value,10),r=state.helpFor;
+    var data={
+      requestId:r.id,name:$("hName").value.trim(),amount:amt>0?amt:0,
+      note:$("hNote").value.trim(),contact:$("hContact").value.trim(),
+      status:"offered",uid:uid,createdAt:Date.now()
+    };
+    busy(f,true);
+    store.add("pledges",data).then(function(){
+      f.reset();$("helpDlg").close();state.open[r.id]=true;toast("Offer sent");render();
+    }).catch(function(){toast("Couldn't send the offer. Try again.")}).then(function(){busy(f,false)});
+  });
+
+  /* ---------- start ---------- */
+  async function boot(){
+    render();
+    var d=null,u=null;
+    try{
+      if(window.claude&&window.claude.use){
+        var r=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+        d=r[0];u=r[1];
+      }
+    }catch(e){}
+    db=d;
+    if(u){
+      try{uid=await u.id()}catch(e){}
+      try{isAdmin=!!(await u.canEdit())}catch(e){}
+      try{canWrite=(await u.can("data.write"))!==false}catch(e){}
+    }
+    if(!uid)uid=localId();
+    if(!db){previewMode=true;isAdmin=true}
+    var first=true;
+    store.watch("pledges",function(rows){state.pledges=rows;render()});
+    store.watch("requests",function(rows){state.requests=rows;if(first){first=false;state.loading=false}render()});
+    if(!db){state.loading=false;render()}
+  }
+  boot();
+})();
+</script>
+</body>
+</html>
